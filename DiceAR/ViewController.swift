@@ -12,12 +12,22 @@ import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
 
+    var diceArray = [SCNNode]() //every time we place a new dice on the plane, its coordinates get added into this array.
+    
     @IBOutlet var sceneView: ARSCNView!
     @IBAction func rollDice(_ sender: UIBarButtonItem) {
         spinAllDice()
     }
     
-    var diceArray = [SCNNode]() //every time we place a new dice on the plane, its coordinates get added into this array.
+    @IBAction func deleteAllDice(_ sender: UIBarButtonItem) { //a button to remove all of the dice on the plane.
+        if !diceArray.isEmpty {
+            for dice in diceArray {
+                dice.removeFromParentNode()
+            }
+        }
+        
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,6 +131,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) { //if we shake the phone, the dice get rolled.
         spinAllDice()
     }
+    
+    
     
     //Responsible for placing a transparent grid visualization onto a horizontal plane when it gets detected. it is important to rotate the plane 90 degrees counterclockwise because it is vertical by default. a call to SCNMAtrix4makeRotation accomplishes just that.
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) { //when a new horizontal plane is detected. ARAnchor - real world position in the horizontal plane.

@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--DiceAR-->
         <scene sceneID="tXr-a1-R10">
             <objects>
                 <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="DiceAR" customModuleProvider="target" sceneMemberID="viewController">
@@ -17,7 +17,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </arscnView>
-                    <navigationItem key="navigationItem" id="6yv-sr-Ead">
+                    <navigationItem key="navigationItem" title="DiceAR" id="6yv-sr-Ead">
+                        <barButtonItem key="leftBarButtonItem" systemItem="trash" id="9av-oO-cDI">
+                            <connections>
+                                <action selector="deleteAllDice:" destination="BV1-FR-VrT" id="Ctx-nI-gig"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="dcS-nh-r4J">
                             <connections>
                                 <action selector="rollDice:" destination="BV1-FR-VrT" id="fxU-Hu-cwK"/>
