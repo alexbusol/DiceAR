@@ -13,6 +13,11 @@ import ARKit
 class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
+    @IBAction func rollDice(_ sender: UIBarButtonItem) {
+        spinAllDice()
+    }
+    
+    var diceArray = [SCNNode]() //every time we place a new dice on the plane, its coordinates get added into this array.
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,15 +80,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                                                hitResult.worldTransform.columns.3.y + diceNode.boundingSphere.radius,
                                                hitResult.worldTransform.columns.3.z) //need to change the y position a bit because it places the center of the object at the plane, making half of it below the plane.
                     
+                diceArray.append(diceNode)
+                    
                 sceneView.scene.rootNode.addChildNode(diceNode)
                     
-                    let randomXNum = Float(arc4random_uniform(4) + 1) * (Float.pi/2) //creating rotation angles for x and z. rotation in Y axis is not necessary.
-                    let randomZNum = Float(arc4random_uniform(4) + 1) * (Float.pi/2)
+                    roll(diceNode)
                     
-                    diceNode.runAction(SCNAction.rotateBy(x: CGFloat(randomXNum * 4), //increasing the number of rotations.
-                                                          y: 0,
-                                                          z: CGFloat(randomZNum * 4),
-                                                          duration: 0.5))
+                    
                 }
             }
             /*
@@ -97,6 +100,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
+    func spinAllDice() {
+        if !diceArray.isEmpty {
+            for dice in diceArray {
+                roll(dice)
+            }
+        }
+    }
+    
+    func roll(_ dice : SCNNode) {
+        let randomXNum = Float(arc4random_uniform(4) + 1) * (Float.pi/2) //creating rotation angles for x and z. rotation in Y axis is not necessary.
+        let randomZNum = Float(arc4random_uniform(4) + 1) * (Float.pi/2)
+        
+        dice.runAction(SCNAction.rotateBy(x: CGFloat(randomXNum * 4), //increasing the number of rotations.
+            y: 0,
+            z: CGFloat(randomZNum * 4),
+            duration: 0.5))
+    }
+    
+    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) { //if we shake the phone, the dice get rolled.
+        spinAllDice()
+    }
     
     //Responsible for placing a transparent grid visualization onto a horizontal plane when it gets detected. it is important to rotate the plane 90 degrees counterclockwise because it is vertical by default. a call to SCNMAtrix4makeRotation accomplishes just that.
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) { //when a new horizontal plane is detected. ARAnchor - real world position in the horizontal plane.
